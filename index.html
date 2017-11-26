@@ -1,0 +1,419 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Canvas</title>
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h1>Canvas</h1>
+			</section>
+			<section>
+				<h2>What we can do with Canvas?!</h2>
+				<div id="fragments">
+					<ul>
+						<li class="fragment">draw graphs</li>
+						<li class="fragment">make photo compositions</li>
+						<li class="fragment">create animations</li>
+						<li class="fragment">do real-time video processing or rendering</li>
+						<li class="fragment">create games</li>
+					</ul>
+				</div>
+			</section>
+			<section>
+				<p>The Canvas element has only two attributes: width and height.</p>
+				<pre><code class="hljs" data-trim contenteditable>
+					<canvas width="150" height="150" style="background-color:white;">
+					</canvas>
+				</code></pre>
+				<canvas id="demo" width="150" height="150" style="background-color:white;">
+				</canvas>
+			</section>
+			<section>
+				<p>When no width and height attributes are specified, the canvas will initially be 300 pixels wide and 150 pixels high.</p>
+				<pre><code class="hljs" data-trim contenteditable>
+					<canvas style="background-color:white;"></canvas>
+				</code></pre>
+				<canvas style="background-color:white;"></canvas>
+			</section>
+			<section>
+				<p>The content inside of the canvas element is fallback content, which will only display if a browser doesn't support canvas.</p>
+				<pre><code class="hljs" data-trim contenteditable>
+					<canvas width="200" height="200">
+						<!-- Insert fallback content here -->
+					</canvas>
+				</code></pre>
+				<p class="fragment">The <b>"canvas"</b> element requires the closing tag. If this tag is not present, the rest of the document would be considered
+					the fallback content and wouldn't be displayed.</p>
+			</section>
+			<section>
+				<p>The
+					<b>"id"</b> attribute isn't specific to the
+					<b>"canvas"</b> element but it is always a good idea to supply an id because this makes it much easier to identify it in
+					a script.</p>
+				<pre><code class="hljs" data-trim contenteditable>
+					<canvas id="demo" style="background-color:white;"></canvas>
+				</code></pre>
+				<canvas id="demo" style="background-color:white;"></canvas>
+			</section>
+			<section>
+				<p>The <b>"canvas"</b> element can be styled just like any normal image (margin, border, background…). </p>
+				<pre><code class="hljs" data-trim contenteditable>
+					<canvas id="demo" 
+						style="background-color:white;
+						border:10px solid green;
+						margin-left:-550px;
+						padding:10px;">
+					</canvas>
+				</code></pre>
+				<canvas id="demo" style="background-color:white; border:10px solid green; margin-left:-550px; padding: 10px;"></canvas>
+			</section>
+			<section>In this presentation , I'll show you how:
+				<ul>
+					<li class="fragment">To access the canvas element</li>
+					<li class="fragment">Drawing shapes</li>
+					<li class="fragment">Erasing things</li>
+					<li class="fragment">Changing colors</li>
+					<li class="fragment">Changing Line Width</li>
+					<li class="fragment">Inserting images</li>
+					<li class="fragment">Drawing texts</li>
+					<li class="fragment">Using gradients</li>
+				</ul>
+			</section>
+			<section>
+				<h1>Let's go!!!</h1>
+			</section>
+			<section>
+				<h3>Coordinate system</h3>
+				<p style="font-size:32px;">The 2d rendering context in canvas uses a standard Cartesian coordinate system, with the origin point (0, 0) at the top
+					left. Moving to the right will increase the value of the x axis, while moving downward will increase the value of the
+					y axis. One unit in the coordinate system is equal to one pixel on the screen.</p>
+				<img src="img/coordinate.jpg" alt="Coordinate gird" width="400">
+			</section>
+			<section>
+				<h4>Accessing the 2d rendering context</h4>
+				<p style="font-size:32px;">To actually use the 2d rendering context, we'll need to use the JavaScript API. The part of the API that we want to
+					use is the getContext method, like so:
+				</p>
+				<pre><code class="hljs" data-trim contenteditable>															   								
+					<canvas id="Demo" width="200" height="200">
+						<!-- fallback content -->
+					</canvas>
+					<script> 
+						let canvas = document.getElementById("Demo");
+						let ctx = canvas.getContext("2d");
+					</script>
+				</code></pre>
+				<p style="font-size:32px;" class="fragment">As a result of calling getContext, the ctx variable will now contain a reference to the 2d rendering context. This means
+					that we now have everything in place to actually start drawing onto the canvas. </p>
+			</section>
+			<section>
+				<h3>Drawing Rectangles</h3>
+				<p class="fragment">We can draw:
+				</p>
+				<ul>
+					<li class="fragment">filled rectangles</li>
+					<li class="fragment">stroked rectangles</li>
+				</ul>
+			</section>
+			<section>
+				<h4>Filled and stroke rectangles</h4>
+				<ul>
+					<span style="font-size:32px;">There are four arguments in a call to fillRect and strokeRect</span>
+					<li style="font-size:24px;">The first is the x position of the origin point (the top left).</li>
+					<li style="font-size:24px;">The second is the y position of the origin point.</li>
+					<li style="font-size:24px;">The third is the width.</li>
+					<li style="font-size:24px;">And the forth is the height</li>
+				</ul>
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.fillRect(x, y, width, height);
+				</code></pre>
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.strokeRect(x, y, width, height);
+				</code></pre>
+			</section>
+			<section>
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.fillRect(0, 0, 150, 50);
+					ctx.strokeRect(0, 100, 150, 50);
+				</code></pre>
+				<img src="img/Rect.png" alt="Filled and stroke rectangles">
+			</section>
+			<section>
+				<h4>Drawing Paths</h4>
+				<ul>
+					<span style="font-size:32px;">Drawing a simple path requires the use of a few API methods:</span>
+					<li style="font-size:24px;">
+						<code class="hljs" style="display:inline;">beginPath</code> - starts a new path..</li>
+					<li style="font-size:24px;">
+						<code class="hljs" style="display:inline;">moveTo</code> - moves the point that the path is drawn from..</li>
+					<li style="font-size:24px;">
+						<code class="hljs" style="display:inline;">lineTo</code> - draws a straight path to this point from the point defined in moveTo, or the point from the last call to lineTo.</li>
+					<li style="font-size:24px;">
+						<code class="hljs" style="display:inline;">closePath</code> - closes the path by connecting the last point to the starting point.</li>
+					<li style="font-size:24px;">
+						<code class="hljs" style="display:inline;">fill</code> - fills the path with a colour.</li>
+					<li style="font-size:24px;">
+						<code class="hljs" style="display:inline;"> stroke</code> - outlines the path.</li>
+				</ul>
+			</section>
+			<section>
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.beginPath();
+					ctx.moveTo(50, 50);
+					ctx.lineTo(50, 250);
+					ctx.lineTo(250, 250);
+					ctx.closePath();
+					ctx.fill();
+
+					ctx.beginPath();
+					ctx.moveTo(20, 80);
+					ctx.lineTo(100, 80);
+					ctx.lineTo(60, 120);
+					ctx.closePath();
+					ctx.stroke();
+				</code></pre>
+				<img src="img/Path.png" alt="Filled and stroke paths">
+			</section>
+			<section>
+				<h4>Drawing arcs and circles</h4>
+				<p style="font-size:32px;">To draw arcs or circles, we use the <code class="hljs" style="display:inline;">arc()</code> or <code class="hljs" style="display:inline;">arcTo()</code> methods.</p> 
+				<p style="font-size:24px;"><code class="hljs" style="display:inline;">arc(x, y, radius, startAngle, endAngle, anticlockwise)</code></br>Draws an arc which is centered at (x, y) position with radius 'r' starting at 'startAngle' and ending at 'endAngl'e going in the given direction indicated by 'anticlockwise' (defaulting to clockwise).</p>
+				<p style="font-size:24px;"><code class="hljs" style="display:inline;">arcTo(x1, y1, x2, y2, radius)</code></br>Draws an arc with the given control points and radius, connected to the previous point by a straight line.</p>
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.beginPath();
+					ctx.arc(100, 100, 30, 0, 360, false);
+					ctx.fill();
+				</code></pre>
+				<img src="img/arc.png" alt="Arcs and circles">
+			</section>
+			<section>
+				<h4>Bezier and quadratic curves</h4>
+				<p>They are generally used to draw complex organic shapes.</p> 
+				<p style="font-size:32px;"><code class="hljs" style="display:inline;">quadraticCurveTo(cp1x, cp1y, x, y)</code></br>Draws a quadratic Bézier curve from the current pen position to the end point specified by x and y, using the control point specified by cp1x and cp1y. Use one control point.</p>
+				<p style="font-size:32px;"><code class="hljs" style="display:inline;">bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)</code></br>Draws a cubic Bézier curve from the current pen position to the end point specified by x and y, using the control points specified by (cp1x, cp1y) and (cp2x, cp2y). Use two control point.</p>
+			</section>
+			<section>	
+				<pre><code class="hljs" data-trim contenteditable>
+					// quadraticCurveTo(cp1x, cp1y, x, y);
+
+					ctx.beginPath();
+					ctx.moveTo(75, 25);
+					ctx.quadraticCurveTo(25, 25, 25, 62.5);
+					ctx.quadraticCurveTo(25, 100, 50, 100);
+					ctx.quadraticCurveTo(50, 120, 30, 125);
+					ctx.quadraticCurveTo(60, 120, 65, 100);
+					ctx.quadraticCurveTo(125, 100, 125, 62.5);
+					ctx.quadraticCurveTo(125, 25, 75, 25);
+					ctx.fill();
+				</code></pre>
+				<img src="img/quadratic-curves.png" alt="Quadratic-curves">
+			</section>
+			<section>	
+				<pre><code class="hljs" data-trim contenteditable>
+					// bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+
+					ctx.beginPath();
+					ctx.moveTo(75, 40);
+					ctx.bezierCurveTo(75, 37, 70, 25, 50, 25);
+					ctx.bezierCurveTo(20, 25, 20, 62.5, 20, 62.5);
+					ctx.bezierCurveTo(20, 80, 40, 102, 75, 120);
+					ctx.bezierCurveTo(110, 102, 130, 80, 130, 62.5);
+					ctx.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
+					ctx.bezierCurveTo(85, 25, 75, 37, 75, 40);
+					ctx.stroke();
+				</code></pre>
+				<img src="img/bezie.png" alt="Bezier-curves">
+			</section>
+			<section>
+				<h4>Erasing thing</h4>
+				<p>Fortunately, erasing the canvas is easy. We just need one method from the JavaScript API.
+					That method is <code class="hljs" style="display:inline;">clearRect</code>, and its job is to make every pixel within the rectangle transparent.</p>
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.fillRect(10, 10, 50, 50);
+					ctx.fillRect(140, 140, 50, 50);
+
+					ctx.clearRect(20, 20, 160, 160);
+				</code></pre>
+				<img src="img/erase.png" alt="Erase canvas">
+			</section>
+			<section>
+				<h4>Changing colors</h4>
+				<p class="fragment" style="font-size:32px;">So far, everything that we've drawn has been filled or stroked in black.
+					Fortunately, there are a couple of properties within the JavaScript API that let we change the colour of the shapes that we're drawing.
+				</p><p class="fragment" style="font-size:32px;">These properties are <code class="hljs" style="display:inline;">fillStyle</code> and <code class="hljs" style="display:inline;">strokeStyle</code>.</p><p class="fragment" style="font-size:32px;">We can use RGB, RGBA, HSA, colour words (eg. "red"), and hexadecimal values.</p>
+			</section>
+			<section>
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.fillRect(10, 10, 50, 50);
+					ctx.fillStyle="rgb(23,45,65)";
+					ctx.fillRect(140, 140, 50, 50);
+					ctx.fillStyle="#333";
+					ctx.strokeRect(75, 10, 50, 50);
+					ctx.strokeStyle="green";
+					ctx.strokeRect(140, 10, 50, 50);
+					ctx.fillStyle="rgba(0,0,0,.3)";
+					ctx.fillRect(75, 70, 50, 50);
+				</code></pre>
+				<img src="img/colors.png" alt="Change colors">
+			</section>
+			<section>
+				<h4>Changing Line Width</h4>
+				<p style="font-size:32px;">Aside from changing colour, we can also change the width of a stroked outline. To do this we can use the lineWidth property of the JavaScript API.
+				</p><p style="font-size:32px;">These propertie is <code class="hljs" style="display:inline;">lineWidth</code></p>
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.strokeStyle="red";
+					ctx.lineWidth = 20;
+					ctx.strokeRect(50, 50, 100, 100);
+				</code></pre>
+				<img src="img/line-width.png" alt="Changing Line Width">
+			</section>
+			<section>
+				<h4>Inserting images</h4>
+				<p style="font-size:32px;">The <code class="hljs" style="display:inline;">drawImage</code> method allows us to insert other images (img and canvas elements) into our canvas context.</p>
+				<p style="font-size:28px;">This is quite a complex method, which takes three, five or nine arguments:</p>
+			</section>
+			<section>	
+				<p style="font-size:28px;">Three arguments</b>: The basic <code class="hljs" style="display:inline;">drawImage</code> usage involves one argument to point to the image to be included, and two to specify the destination coordinates inside our canvas context.</p>			
+				<pre><code class="hljs" data-trim contenteditable>
+					// Three arguments: the element, destination (x,y)
+					// coordinates.
+					// ctx.drawImage(img_elem, dx, dy);
+
+					let img = new Image();
+					img.src = '/img/google.png';						
+					ctx.drawImage(img,0,0);
+				</code></pre>
+				<img src="img/insert-img1.png" alt="Inserting images. Three arguments">
+			</section>
+			<section>
+					<p style="font-size:28px;"><b>Five arguments</b>: The middle <code class="hljs" style="display:inline;">drawImage</code> usage includes the above three arguments, plus two to specify the width and height of the inserted image (in cases where we want to resize it).</p>				
+				<pre><code class="hljs" data-trim contenteditable>
+					// Five arguments: the element, destination (x,y)
+					// coordinates, and destination width and height
+					// (if we want to resize the source image).
+					// ctx.drawImage(img_elem, dx, dy, dw, dh);
+
+					let img = new Image();
+					img.src = '/img/google.png';						
+					ctx.drawImage(img,0,0);
+					ctx.drawImage(img,0,70, 100,40);
+				</code></pre>
+				<img src="img/insert-img2.png" alt="Inserting images. Five arguments">
+			</section>
+			<section>
+					<p style="font-size:28px;"><b>Nine arguments</b>: The most advanced <code class="hljs" style="display:inline;">drawImage</code> usage includes the above five arguments, plus two values for coordinates inside the source images, and two values for width and height inside the source image. These values allow us to dynamically crop the source image before bringing it into our canvas context.</p>				
+				<pre><code class="hljs" data-trim contenteditable>
+					// Nine arguments: the element, source (x,y) coordinates,
+					// source width and height (for cropping), destination (x,y)
+					// coordinates, and destination width
+					// and height (resize).
+					// ctx.drawImage(img_elem, sx, sy, sw, sh, dx, dy, dw, dh);
+
+					let img = new Image();
+					img.src = '/img/google.png';						
+					ctx.drawImage(img,0,0);
+					ctx.drawImage(img,0,70, 100,40);
+					ctx.drawImage(img,60,0,85,70,0,100,80,40);
+				</code></pre>
+				<img src="img/insert-img3.png" alt="Inserting images. Nine arguments">
+			</section>
+			<section>
+				<h4>Drawing texts</h4>						
+				<ul>
+					<span  style="font-size:28px;"> The following text properties are available on the context object:</span>
+					<li  style="font-size:24px;"><code class="hljs" style="display:inline;">font</code> Specifies the font of the text, in the same manner as the CSS font-family property)</li>
+					<li  style="font-size:24px;"><code class="hljs" style="display:inline;">textAlign</code> Specifies the horizontal alignment of the text. Values: start, end, left, right, center. Default value: <i>start.</i></li>
+					<li  style="font-size:24px;"><code class="hljs" style="display:inline;">textBaseline</code> Specifies the vertical alignment of the text. Values: top, hanging, middle, alphabetic, ideographic, bottom. Default value:<i> alphabetic.</i></li>
+				</ul>
+				<p style="font-size:24px;">You have two methods for drawing text: <code class="hljs" style="display:inline;">fillText</code> and <code class="hljs" style="display:inline;">strokeText</code> . The first one draws the text shape, filled using the current fillStyle, while the latter draws the text outline/border using the current strokeStyle. Both take three arguments: the text you want to display, and the (x,y) coordinates to define where to render it. There's also an optional fourth argument - maximum width.</p>
+			</section>
+			<section>				
+				<pre><code class="hljs" data-trim contenteditable>
+					ctx.fillStyle    = 'red';
+					ctx.font         = 'italic 50px serif';
+					ctx.textBaseline = 'top';
+					ctx.fillText  ('Google.com', 0, 0);
+							
+					ctx.strokeStyle    = 'green';
+					ctx.font         = 'bold 50px serif';
+					ctx.strokeText('Google.com', 0, 100);
+				</code></pre>
+				<img src="img/text.png" alt="Drawing texts">
+			</section>
+			<section>
+				<h4>Use gradients</h4>						
+				<ul>
+					<span  style="font-size:28px;"> To create CanvasGradient objects we can use two methods:</span>
+					<li  style="font-size:24px;"><code class="hljs" style="display:inline;">createLinearGradient</code></li>
+					<li  style="font-size:24px;"><code class="hljs" style="display:inline;">createRadialGradient</code></li>
+				</ul>
+				<p style="font-size:24px;">Once we have the gradient object we can add color stops along the gradient using the <code class="hljs" style="display:inline;">addColorStop</code>  method of the object</p>
+			</section>
+			<section>				
+				<pre><code class="hljs" data-trim contenteditable>
+					let gradient = ctx.createLinearGradient(0, 50, 300, 100);
+					gradient.addColorStop(0, 'blue');
+					gradient.addColorStop(0.3, 'red');
+					gradient.addColorStop(0.5, 'yellow');
+					gradient.addColorStop(0.6, 'blue'); 
+					gradient.addColorStop(0.8, 'green'); 
+					gradient.addColorStop(1, 'red');
+							
+					ctx.fillStyle    = gradient;
+					ctx.font         = 'bold 100px serif';
+					ctx.textBaseline = 'top';
+					ctx.fillText  ('Google.com', 0, 0);
+							
+					ctx.strokeStyle    = gradient;
+					ctx.font         = 'bold 100px serif';
+					ctx.strokeText('Google.com', 0, 100);
+				</code></pre>
+				<img src="img/gradient.png" alt="Linear Gradient">
+			</section>
+			<section>
+				<h1>Thank you!</h1>
+			</section>
+		</div>
+	</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+
+	<script>
+										// More info about config & dependencies:
+										// - https://github.com/hakimel/reveal.js#configuration
+										// - https://github.com/hakimel/reveal.js#dependencies
+										Reveal.initialize({
+											dependencies: [
+												{ src: 'plugin/markdown/marked.js' },
+												{ src: 'plugin/markdown/markdown.js' },
+												{ src: 'plugin/notes/notes.js', async: true },
+												{ src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+											]
+										});
+	</script>
+</body>
+
+</html>
